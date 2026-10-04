@@ -16,7 +16,7 @@ leaving their notebooks.
 GRAPHIT was developed as part of a master's thesis. The overall system consists of two
 parts:
 
-- **Backend** (not part of this repository): a FastAPI service with a LangGraph
+- **Backend** ([GRAPHIT](https://github.com/Barbarossa2711/GRAPHIT), separate repository): a FastAPI service with a LangGraph
   multi-agent system (supervisor, tutor agent, recommender agent) and a quiz service on
   top of a Neo4j knowledge graph. The graph holds the **domain model** (lecture → chapter
   → topic → subtopic → concept, with prerequisite edges) and the **learner model** in the
@@ -166,7 +166,8 @@ student id; an explicit `studentId` setting takes precedence.
 
 ## Backend API
 
-The extension expects the following endpoints:
+The extension expects the following endpoints of the
+[GRAPHIT backend](https://github.com/Barbarossa2711/GRAPHIT):
 
 | Endpoint | Purpose |
 |---|---|
