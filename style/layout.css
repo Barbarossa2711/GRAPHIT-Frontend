@@ -1,0 +1,769 @@
+/* Main widget shell, sidebar, tab bar. */
+
+.graphit-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border-bottom: 1px solid var(--jp-border-color2);
+  background: var(--jp-layout-color2);
+  flex: 0 0 auto;
+}
+
+.graphit-tab {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--jp-ui-font-color2);
+  font-family: inherit;
+  font-size: var(--jp-ui-font-size1);
+  padding: 8px 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.graphit-tab:hover {
+  background: var(--jp-layout-color1);
+}
+
+.graphit-tab[aria-selected='true'] {
+  color: var(--jp-ui-font-color1);
+  border-bottom-color: var(--jp-brand-color1);
+  background: var(--jp-layout-color1);
+}
+
+.graphit-tab-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--jp-brand-color1);
+  color: var(--jp-layout-color1);
+  font-size: var(--jp-ui-font-size0);
+  line-height: 18px;
+  text-align: center;
+}
+
+.graphit-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+}
+
+.graphit-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 16px;
+}
+
+/* Concepts tab: overview above, two-column split below. */
+/* min-height: 0 so the tree can scroll inside its own box. */
+.graphit-concepts {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+.graphit-overview {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--jp-border-color2);
+  background: var(--jp-layout-color1);
+}
+
+.graphit-overview-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.graphit-overview-title {
+  font-weight: 600;
+}
+
+.graphit-overview-main {
+  font-size: var(--jp-ui-font-size2);
+}
+
+.graphit-overview-legend {
+  margin-top: 8px;
+}
+
+.graphit-overview-legend > summary {
+  cursor: pointer;
+  color: var(--jp-ui-font-color2);
+}
+
+/* Explicit line-height so each dt is exactly one line tall. */
+.graphit-overview-legend .graphit-facts {
+  line-height: 1.5;
+  align-items: start;
+}
+
+/*
+ * Legend terms are symbols: no wrapping, and each dt is one line tall so symbols align
+ * with the first line of their description.
+ */
+.graphit-overview-legend .graphit-facts > dt {
+  min-width: 90px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 1.5em;
+}
+
+.graphit-overview-legend .graphit-bar,
+.graphit-overview-legend .graphit-achieve {
+  width: 70px;
+  flex: 0 0 auto;
+}
+
+.graphit-split {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+/* Width from --graphit-split-left (set in App.tsx); fixed basis, no growing. */
+.graphit-split-left {
+  flex: 0 0 var(--graphit-split-left, 45%);
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.graphit-split-right {
+  flex: 1 1 auto;
+  min-width: 260px;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Divider: a 2px line inside a wider hit area. */
+.graphit-splitter {
+  flex: 0 0 7px;
+  position: relative;
+  cursor: col-resize;
+  background: var(--jp-border-color2);
+  background-clip: content-box;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  touch-action: none;
+}
+
+.graphit-splitter:hover,
+.graphit-splitter:focus-visible,
+.graphit-splitter[data-dragging='true'] {
+  background-color: var(--jp-brand-color1);
+  outline: none;
+}
+
+/* Prevents text selection while dragging. */
+.graphit-splitter[data-dragging='true']::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  cursor: col-resize;
+  z-index: 10;
+}
+
+@media (width <= 800px) {
+  .graphit-split {
+    flex-direction: column;
+  }
+
+  /* Stacked layout: divider hidden, fixed halves. */
+  .graphit-splitter {
+    display: none;
+  }
+
+  .graphit-split-left {
+    border-bottom: 1px solid var(--jp-border-color2);
+    flex: 0 0 50%;
+  }
+}
+
+.graphit-tree-title {
+  margin: 0;
+  padding: 8px 8px 4px;
+  flex: 0 0 auto;
+}
+
+.graphit-guide {
+  max-width: 720px;
+  padding: 12px 16px 24px;
+  line-height: 1.5;
+}
+
+.graphit-guide h3 {
+  margin: 20px 0 6px;
+}
+
+.graphit-guide-list dt {
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.graphit-guide-list dd {
+  margin: 2px 0 0;
+  color: var(--jp-ui-font-color2);
+}
+
+/* Tab overview as cards */
+.graphit-guide-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.graphit-guide-card {
+  padding: 12px;
+  border: 1px solid var(--jp-border-color2);
+  border-radius: 8px;
+  background: var(--jp-layout-color2);
+}
+
+.graphit-guide-card-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.graphit-guide-card h4 {
+  margin: 6px 0 4px;
+}
+
+.graphit-guide-card p {
+  margin: 0;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+}
+
+/* Numbered steps with a badge */
+.graphit-guide-steps {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.graphit-guide-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.graphit-guide-step-num {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--jp-ui-font-size0);
+  font-weight: 600;
+  color: var(--jp-ui-inverse-font-color1, var(--jp-layout-color1));
+  background: var(--jp-brand-color1);
+}
+
+/* Live mastery-bar example */
+.graphit-guide-example {
+  margin: 10px 0 4px;
+  padding: 12px 16px;
+  border: 1px solid var(--jp-border-color2);
+  border-radius: 8px;
+  background: var(--jp-layout-color1);
+}
+
+/* Status list: pill + label on the left, longer explanation on the right */
+.graphit-guide-status {
+  margin: 8px 0 0;
+}
+
+.graphit-guide-status-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 8px 16px;
+  padding: 8px 0;
+  border-top: 1px solid var(--jp-border-color2);
+}
+
+.graphit-guide-status-row:first-child {
+  border-top: none;
+}
+
+.graphit-guide-status dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.graphit-guide-status dd {
+  margin: 0;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+}
+
+@media (max-width: 520px) {
+  .graphit-guide-status-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+.graphit-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--graphit-gap);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--jp-border-color2);
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+}
+
+.graphit-toolbar input[type='search'],
+.graphit-toolbar input[type='text'] {
+  flex: 1 1 120px;
+  min-width: 80px;
+  background: var(--jp-layout-color1);
+  color: var(--jp-ui-font-color1);
+  border: 1px solid var(--jp-border-color1);
+  border-radius: var(--graphit-radius);
+  padding: 3px 6px;
+  font-family: inherit;
+  font-size: var(--jp-ui-font-size1);
+}
+
+.graphit-section {
+  margin-bottom: 20px;
+}
+
+.graphit-section > h3 {
+  margin: 0 0 8px;
+  font-size: var(--jp-ui-font-size2);
+  font-weight: 600;
+  color: var(--jp-ui-font-color1);
+}
+
+/* Collapsible section: the h3 inside the summary repeats the section heading style. */
+.graphit-collapse > summary {
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.graphit-collapse > summary > h3 {
+  display: inline;
+  margin: 0;
+  font-size: var(--jp-ui-font-size2);
+  font-weight: 600;
+  color: var(--jp-ui-font-color1);
+}
+
+.graphit-collapse > summary:hover > h3 {
+  color: var(--jp-brand-color1);
+}
+
+/* flow-root keeps the bar captions inside this block (e.g. for the tour ring). */
+.graphit-mastery {
+  display: flow-root;
+}
+
+.graphit-section > h4 {
+  margin: 12px 0 6px;
+  font-size: var(--jp-ui-font-size1);
+  font-weight: 600;
+}
+
+/* ---------- left sidebar ---------- */
+
+.graphit-sidebar {
+  /* No bottom padding; the identity block sticks to the lower edge. */
+  padding: 10px 12px 0;
+  overflow: auto;
+  gap: 12px;
+}
+
+/*
+ * Identity footer: pushed down by margin-top: auto and kept visible with sticky. The
+ * wrapper sticks (not the card) so its opaque padding hides scrolling content.
+ */
+.graphit-sidebar-footer {
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  padding-bottom: 10px;
+  background: var(--jp-layout-color1);
+}
+
+/* More compact than a regular block. */
+.graphit-sidebar-identity {
+  padding: 7px 10px;
+}
+
+.graphit-sidebar h2 {
+  margin: 0;
+  font-size: var(--jp-ui-font-size2);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* Acronym expansion below the name. */
+.graphit-sidebar-subtitle {
+  margin: -2px 0 8px;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+}
+
+/* Acronym explanation in the guide: term left, meaning right, two rows. */
+.graphit-guide-acronym {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  margin: 6px 0 14px;
+}
+
+.graphit-guide-acronym dt {
+  font-weight: 600;
+}
+
+.graphit-guide-acronym dd {
+  margin: 0;
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-sidebar-block {
+  border: 1px solid var(--jp-border-color2);
+  border-radius: var(--graphit-radius);
+  padding: 10px;
+  background: var(--jp-layout-color2);
+}
+
+/* Heading of a sidebar block. */
+.graphit-sidebar-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* ---------- activity heatmap ---------- */
+
+/* Fixed height, so the grid does not move when the hover text changes. */
+.graphit-heatmap-head {
+  margin-bottom: 6px;
+  min-height: 18px;
+}
+
+.graphit-heatmap-hover {
+  color: var(--jp-ui-font-color1);
+}
+
+/* Scales with the panel width, keeping its aspect ratio. */
+.graphit-heatmap-grid {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.graphit-heatmap-cell {
+  cursor: default;
+  /* Five levels as opacity steps of the mastered colour (one hue, theme-aware). */
+  fill: var(--jp-layout-color3);
+}
+
+.graphit-heatmap-cell[data-level='1'] {
+  fill: color-mix(in srgb, var(--graphit-status-mastered) 30%, transparent);
+}
+
+.graphit-heatmap-cell[data-level='2'] {
+  fill: color-mix(in srgb, var(--graphit-status-mastered) 55%, transparent);
+}
+
+.graphit-heatmap-cell[data-level='3'] {
+  fill: color-mix(in srgb, var(--graphit-status-mastered) 78%, transparent);
+}
+
+.graphit-heatmap-cell[data-level='4'] {
+  fill: var(--graphit-status-mastered);
+}
+
+/* Hover outline instead of recolouring; after the level rules so it always wins. */
+.graphit-heatmap-cell[data-hovered='true'] {
+  stroke: var(--jp-ui-font-color1);
+  stroke-width: 1.5;
+}
+
+/* Future days, drawn faintly. */
+.graphit-heatmap-cell[data-level='future'] {
+  fill: var(--jp-layout-color2);
+  stroke: var(--jp-layout-color3);
+  stroke-width: 1;
+}
+
+.graphit-heatmap-month {
+  font-size: 9px;
+  fill: var(--jp-ui-font-color3);
+}
+
+.graphit-heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 6px;
+}
+
+.graphit-heatmap-key {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--jp-layout-color3);
+}
+
+.graphit-heatmap-key[data-level='1'] {
+  background: color-mix(
+    in srgb,
+    var(--graphit-status-mastered) 30%,
+    transparent
+  );
+}
+
+.graphit-heatmap-key[data-level='2'] {
+  background: color-mix(
+    in srgb,
+    var(--graphit-status-mastered) 55%,
+    transparent
+  );
+}
+
+.graphit-heatmap-key[data-level='3'] {
+  background: color-mix(
+    in srgb,
+    var(--graphit-status-mastered) 78%,
+    transparent
+  );
+}
+
+.graphit-heatmap-key[data-level='4'] {
+  background: var(--graphit-status-mastered);
+}
+
+.graphit-sidebar-due {
+  text-align: center;
+}
+
+.graphit-bignum {
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 600;
+  color: var(--graphit-status-due);
+}
+
+.graphit-bignum[data-zero='true'] {
+  color: var(--jp-ui-font-color3);
+}
+
+.graphit-sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.graphit-conn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-conn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jp-ui-font-color3);
+}
+
+.graphit-conn-dot[data-state='ok'] {
+  background: var(--jp-success-color1);
+}
+
+.graphit-conn-dot[data-state='mock'] {
+  background: var(--jp-warn-color1);
+}
+
+.graphit-conn-dot[data-state='error'] {
+  background: var(--jp-error-color1);
+}
+
+/* ---------- buttons ---------- */
+
+.graphit-btn {
+  appearance: none;
+  font-family: inherit;
+  font-size: var(--jp-ui-font-size1);
+  padding: 4px 10px;
+  border-radius: var(--graphit-radius);
+  border: 1px solid var(--jp-border-color1);
+  background: var(--jp-layout-color2);
+  color: var(--jp-ui-font-color1);
+  cursor: pointer;
+}
+
+.graphit-btn:hover:not(:disabled) {
+  background: var(--jp-layout-color3);
+}
+
+.graphit-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.graphit-btn--primary {
+  background: var(--jp-brand-color1);
+  border-color: var(--jp-brand-color1);
+  color: var(--jp-layout-color1);
+}
+
+.graphit-btn--primary:hover:not(:disabled) {
+  background: var(--jp-brand-color0, var(--jp-brand-color1));
+}
+
+/* Armed second step of a two-step action. */
+.graphit-btn--warn {
+  background: var(--jp-warn-color1);
+  border-color: var(--jp-warn-color1);
+  color: var(--jp-layout-color1);
+  font-weight: 600;
+}
+
+.graphit-btn--warn:hover:not(:disabled) {
+  background: var(--jp-warn-color0, var(--jp-warn-color1));
+}
+
+.graphit-btn--quiet {
+  border-color: transparent;
+  background: transparent;
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-btn--quiet:hover:not(:disabled) {
+  background: var(--jp-layout-color2);
+}
+
+.graphit-btnrow {
+  display: flex;
+  gap: var(--graphit-gap);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/*
+ * "Lernpfad-Empfehlung" card above the tree; more prominent than the legend below it.
+ * color-mix keeps the tint readable in both themes.
+ */
+.graphit-next {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--jp-brand-color1) 35%, transparent);
+  border-radius: 6px;
+  background: color-mix(
+    in srgb,
+    var(--jp-brand-color1) 8%,
+    var(--jp-layout-color1)
+  );
+}
+
+.graphit-next-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.graphit-next-title {
+  font-weight: 600;
+}
+
+.graphit-next-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.graphit-next-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The whole row is clickable. */
+.graphit-next-link {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 8px;
+  align-items: baseline;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.graphit-next-link:hover {
+  background: color-mix(in srgb, var(--jp-brand-color1) 14%, transparent);
+}
+
+.graphit-next-link:focus-visible {
+  outline: 2px solid var(--jp-brand-color1);
+  outline-offset: -2px;
+}
+
+.graphit-next-name {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Second grid row: a long path must not widen the column. */
+.graphit-next-path {
+  grid-column: 1 / -1;
+  color: var(--jp-ui-font-color3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graphit-next-reason {
+  grid-row: 1;
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--jp-ui-font-color2);
+  white-space: nowrap;
+}
+
+.graphit-next-empty,
+.graphit-next-foot {
+  margin: 8px 0 0;
+}

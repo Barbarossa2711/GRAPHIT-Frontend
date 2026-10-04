@@ -1,0 +1,646 @@
+/* Statistics and review views. */
+
+.graphit-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--graphit-gap);
+  margin-bottom: 16px;
+}
+
+.graphit-card {
+  position: relative; /* anchor for the info mark */
+  border: 1px solid var(--jp-border-color2);
+  border-radius: var(--graphit-radius);
+  padding: 10px 12px;
+  background: var(--jp-layout-color2);
+}
+
+.graphit-card-value {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.graphit-card-label {
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+}
+
+/* Caption above a row of cards. */
+.graphit-cards-title {
+  font-size: var(--jp-ui-font-size0);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--jp-ui-font-color3);
+  margin: 10px 0 4px;
+}
+
+/* Info mark in the card's top-right corner; focusable so the tooltip also shows on focus. */
+.graphit-info {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: block;
+  width: 14px;
+  height: 14px;
+  color: var(--jp-ui-font-color3);
+  cursor: help;
+  border-radius: 50%;
+}
+
+.graphit-info svg {
+  display: block;
+}
+
+.graphit-info:hover,
+.graphit-info:focus-visible {
+  border-color: var(--jp-brand-color1);
+  color: var(--jp-brand-color1);
+  outline: none;
+}
+
+.graphit-card[data-status='due_review'] .graphit-card-value {
+  color: var(--graphit-status-due);
+}
+
+.graphit-card[data-status='mastered'] .graphit-card-value {
+  color: var(--graphit-status-mastered);
+}
+
+.graphit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--jp-ui-font-size1);
+}
+
+.graphit-table th,
+.graphit-table td {
+  text-align: left;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--jp-border-color2);
+  vertical-align: middle;
+}
+
+.graphit-table th {
+  color: var(--jp-ui-font-color2);
+  font-weight: 600;
+  font-size: var(--jp-ui-font-size0);
+}
+
+.graphit-table td.graphit-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.graphit-table td .graphit-achieve {
+  min-width: 90px;
+}
+
+/* ---------- review load chart ---------- */
+
+/* One column per day; fixed height keeps renders comparable. */
+.graphit-load {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 90px;
+  padding: 4px 0 0;
+}
+
+.graphit-load-col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  gap: 2px;
+}
+
+.graphit-load-bar {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: var(--jp-brand-color1);
+}
+
+/* Overdue column in the due colour. */
+.graphit-load-col[data-overdue='true'] .graphit-load-bar {
+  background: var(--graphit-status-due);
+}
+
+/* Empty days keep a hairline. */
+.graphit-load-bar[style*='height: 0'] {
+  background: var(--jp-layout-color3);
+}
+
+/* Sidebar version: lower, no counts. */
+.graphit-load--mini {
+  height: 32px;
+  gap: 2px;
+  padding: 0;
+}
+
+/* Gap separates the overdue column in the mini version. */
+.graphit-load--mini .graphit-load-col[data-overdue='true'] {
+  margin-right: 5px;
+}
+
+.graphit-load-mini-axis {
+  position: relative;
+  height: 1.3em;
+  margin-top: 2px;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color3);
+}
+
+.graphit-load-mini-axis span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* Short tick above each axis label. */
+.graphit-load-mini-axis span::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  width: 1px;
+  height: 3px;
+  background: var(--jp-ui-font-color3);
+}
+
+.graphit-load-count {
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  min-height: 1em;
+}
+
+/*
+ * Three equal cells (not space-between), so the middle label sits exactly at 50 %,
+ * under the day-7 column.
+ */
+.graphit-load-axis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color3);
+  margin: 2px 0 8px;
+}
+
+.graphit-load-axis span:nth-child(2) {
+  text-align: center;
+}
+
+.graphit-load-axis span:last-child {
+  text-align: right;
+}
+
+.graphit-legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+  margin: 6px 0 12px;
+}
+
+.graphit-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ---------- review ---------- */
+
+/* Room for the sticky action bar. */
+.graphit-review {
+  padding-bottom: 0;
+}
+
+/* Headline card with the due count. */
+.graphit-review-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border: 1px solid var(--jp-border-color2);
+  border-left: 3px solid var(--graphit-status-due);
+  border-radius: var(--graphit-radius);
+  background: var(--jp-layout-color2);
+}
+
+.graphit-review-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.graphit-review-count {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--graphit-status-due);
+}
+
+.graphit-review-count[data-zero='true'] {
+  color: var(--jp-ui-font-color3);
+}
+
+.graphit-review-label {
+  font-size: var(--jp-ui-font-size1);
+}
+
+.graphit-review-open {
+  text-align: right;
+  font-size: var(--jp-ui-font-size1);
+  color: var(--jp-ui-font-color3);
+}
+
+.graphit-review-open-value {
+  font-weight: 600;
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-review-intro {
+  margin-top: 0;
+}
+
+/* Selection summary plus the two shortcuts. */
+.graphit-review-listhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--graphit-gap);
+  margin-bottom: 4px;
+}
+
+.graphit-review-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.graphit-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.graphit-review-list {
+  border: 1px solid var(--jp-border-color2);
+  border-radius: var(--graphit-radius);
+  overflow: hidden;
+}
+
+.graphit-checklist li {
+  display: flex;
+  align-items: center;
+  gap: var(--graphit-gap);
+  padding: 5px 4px;
+  border-bottom: 1px solid var(--jp-border-color2);
+}
+
+.graphit-review-list li {
+  padding: 7px 10px;
+  /* Transparent by default so rows do not shift when the accent appears. */
+  border-left: 3px solid transparent;
+}
+
+.graphit-review-list li:hover {
+  background: var(--jp-layout-color2);
+}
+
+/* Row accent: solid = due now, faint = due within the week. */
+.graphit-review-list li[data-overdue='true'] {
+  border-left-color: var(--graphit-status-due);
+}
+
+.graphit-review-list li[data-overdue='false'] {
+  border-left-color: var(--jp-border-color1);
+}
+
+.graphit-checklist li:last-child {
+  border-bottom: none;
+}
+
+.graphit-checklist-name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Fixed width so the bars line up. */
+.graphit-review-bar {
+  flex: 0 0 90px;
+  display: block;
+}
+
+/* Sticky action bar at the bottom of the scroll container. */
+.graphit-review-actionbar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--graphit-gap);
+  flex-wrap: wrap;
+  /* Negative margins let the opaque background span the full width. */
+  margin: 12px -16px 0;
+  padding: 10px 16px;
+  border-top: 1px solid var(--jp-border-color2);
+  background: var(--jp-layout-color1);
+}
+
+/* ---------- combined quiz ---------- */
+
+/* Progress bar shown while all concept quizzes are generated up front. */
+.graphit-batch-progress {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--jp-layout-color3);
+  overflow: hidden;
+  margin: 10px 0 4px;
+}
+
+.graphit-batch-progress-fill {
+  height: 100%;
+  background: var(--jp-brand-color1);
+  transition: width 0.3s ease;
+}
+
+.graphit-batch-genlist {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.graphit-batch-genlist li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 2px 0;
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-batch-genlist li[data-state='active'] {
+  color: var(--jp-ui-font-color1);
+  font-weight: 600;
+}
+
+.graphit-batch-genlist li[data-state='pending'] {
+  color: var(--jp-ui-font-color3);
+}
+
+.graphit-batch-genlist-mark {
+  flex: 0 0 auto;
+  width: 1em;
+  text-align: center;
+}
+
+.graphit-batch-genlist li[data-state='done'] .graphit-batch-genlist-mark {
+  color: var(--jp-success-color1);
+}
+
+.graphit-batch-genlist li[data-state='failed'] .graphit-batch-genlist-mark {
+  color: var(--jp-error-color1);
+}
+
+/* Two columns: questions on the left, a sticky question map on the right. */
+.graphit-batch {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.graphit-batch-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.graphit-batch-concept {
+  margin-top: 18px;
+  padding-top: 8px;
+  border-top: 1px solid var(--jp-border-color2);
+}
+
+.graphit-batch-concept-title {
+  margin: 0 0 8px;
+  font-size: var(--jp-ui-font-size2);
+}
+
+/* Sticky map. Boxes carry the global question number and jump to it on click. */
+.graphit-batch-map {
+  flex: 0 0 172px;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  padding: 10px;
+  border: 1px solid var(--jp-border-color2);
+  border-radius: var(--graphit-radius);
+  background: var(--jp-layout-color2);
+}
+
+.graphit-batch-map-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.graphit-batch-map-group {
+  margin-bottom: 10px;
+}
+
+.graphit-batch-map-concept {
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graphit-batch-map-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.graphit-batch-map-box {
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: var(--graphit-radius);
+  border: 1px solid var(--jp-border-color1);
+  background: var(--jp-layout-color1);
+  color: var(--jp-ui-font-color1);
+  font-family: inherit;
+  font-size: var(--jp-ui-font-size0);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.graphit-batch-map-box:hover {
+  border-color: var(--jp-brand-color1);
+}
+
+.graphit-batch-map-box[data-answered='true'] {
+  background: var(--jp-brand-color1);
+  border-color: var(--jp-brand-color1);
+  color: var(--jp-layout-color1);
+}
+
+.graphit-batch-map-box[data-kind='failed'] {
+  background: var(--jp-layout-color1);
+  border-style: dashed;
+  color: var(--jp-error-color1);
+  cursor: default;
+}
+
+/* Evaluation overview: green when the question was right, red when wrong. */
+.graphit-batch-map-box[data-correct='true'] {
+  background: var(--jp-success-color1);
+  border-color: var(--jp-success-color1);
+  color: var(--jp-layout-color1);
+}
+
+.graphit-batch-map-box[data-correct='false'] {
+  background: var(--jp-error-color1);
+  border-color: var(--jp-error-color1);
+  color: var(--jp-layout-color1);
+}
+
+.graphit-batch-map-legend {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--jp-border-color2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-batch-map-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The legend swatches are decorative, not clickable, and sized down a touch. */
+.graphit-batch-map-legend .graphit-batch-map-box {
+  width: 16px;
+  height: 16px;
+  cursor: default;
+}
+
+/* Scroll offset so the heading stays visible when jumping to a question. */
+.graphit-batch-main [id^='graphit-bq-q-'] {
+  scroll-margin-top: 12px;
+}
+
+/* Evaluation overview map: full width, wraps, boxes jump to the concept card. */
+.graphit-batch-summary-map {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid var(--jp-border-color2);
+  border-radius: var(--graphit-radius);
+  background: var(--jp-layout-color2);
+  margin-bottom: 10px;
+}
+
+.graphit-batch-summary-map .graphit-batch-map-boxes {
+  flex-basis: 100%;
+}
+
+/* Full-width row inside the grey overview box, below the concept boxes. */
+.graphit-batch-summary-legend {
+  flex-basis: 100%;
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--jp-border-color2);
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-batch-summary-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.graphit-batch-summary-legend .graphit-batch-map-box {
+  width: 16px;
+  height: 16px;
+  cursor: default;
+}
+
+/* Scroll offset when the overview jumps to a concept's result card. */
+[id^='graphit-bq-result-'] {
+  scroll-margin-top: 12px;
+}
+
+/* Feedback: one card per concept, details collapsed by default. */
+.graphit-batch-concept-result {
+  margin-top: 12px;
+}
+
+.graphit-batch-concept-score {
+  margin-bottom: 0;
+}
+
+.graphit-batch-concept-details > summary {
+  cursor: pointer;
+  color: var(--jp-ui-font-color2);
+  padding: 6px 0;
+}
+
+@media (width <= 800px) {
+  .graphit-batch {
+    flex-direction: column;
+  }
+
+  .graphit-batch-map {
+    position: static;
+    width: 100%;
+    flex-basis: auto;
+    order: -1;
+  }
+}
+
+/*
+ * Heading above the progress bar; its own class (not `.graphit-meter-label`) so it
+ * aligns with the neighbouring h3.
+ */
+.graphit-meter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin: 16px 0 6px;
+}
+
+.graphit-meter-head > h4 {
+  margin: 0;
+  font-size: var(--jp-ui-font-size2);
+  font-weight: 600;
+  color: var(--jp-ui-font-color1);
+}
+
+.graphit-meter-head > span {
+  font-size: var(--jp-ui-font-size1);
+  color: var(--jp-ui-font-color2);
+}

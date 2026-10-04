@@ -1,0 +1,201 @@
+/*
+ * Guided tour: offer dialog and spotlight.
+ *
+ * Rendered into document.body (outside .graphit-root), so all styles are declared here.
+ * The dimming is the ring's outward shadow, leaving the highlighted region untouched.
+ */
+
+.graphit-tour {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  /* The layer itself passes events through; the backdrop opts back in. */
+  pointer-events: none;
+  font-family: var(--jp-ui-font-family);
+  font-size: var(--jp-ui-font-size1);
+  color: var(--jp-ui-font-color1);
+}
+
+.graphit-tour *,
+.graphit-tour *::before,
+.graphit-tour *::after {
+  box-sizing: border-box;
+}
+
+/* Catches clicks so the interface underneath cannot be operated. */
+.graphit-tour-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+}
+
+/* Without a highlighted region, the backdrop dims the screen itself. */
+.graphit-tour-backdrop[data-spotlight='no'] {
+  background: var(--jp-dialog-background, rgba(0, 0, 0, 0.5));
+}
+
+.graphit-tour-ring {
+  position: fixed;
+  pointer-events: none;
+  border: 2px solid var(--jp-brand-color1);
+  border-radius: var(--graphit-radius, 4px);
+  box-shadow: 0 0 0 9999px var(--jp-dialog-background, rgba(0, 0, 0, 0.5));
+  transition:
+    top 140ms ease,
+    left 140ms ease,
+    width 140ms ease,
+    height 140ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .graphit-tour-ring {
+    transition: none;
+  }
+}
+
+/* ----------------------------------------------------------------- Card */
+
+.graphit-tour-card {
+  position: fixed;
+  width: 360px;
+  max-width: calc(100vw - 28px);
+  max-height: calc(100vh - 28px);
+  overflow-y: auto;
+  pointer-events: auto;
+  background: var(--jp-layout-color1);
+  color: var(--jp-ui-font-color1);
+  border: 1px solid var(--jp-border-color1);
+  border-radius: var(--graphit-radius, 4px);
+  box-shadow: var(--jp-elevation-z8, 0 6px 20px rgba(0, 0, 0, 0.3));
+  padding: 16px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.graphit-tour-card:focus {
+  outline: none;
+}
+
+.graphit-tour-card--center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.graphit-tour-card h2 {
+  margin: 0;
+  font-size: var(--jp-ui-font-size2);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.graphit-tour-card p {
+  margin: 0;
+  line-height: 1.55;
+  color: var(--jp-ui-font-color1);
+}
+
+.graphit-tour-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.graphit-tour-counter {
+  flex: 1 1 auto;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color3);
+  letter-spacing: 0.04em;
+}
+
+.graphit-tour-close {
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+  color: var(--jp-ui-font-color2);
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.graphit-tour-close:hover {
+  background: var(--jp-layout-color2);
+  color: var(--jp-ui-font-color1);
+}
+
+.graphit-tour-footnote {
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color3);
+}
+
+/* ------------------------------------------------------------- Progress */
+
+.graphit-tour-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 2px 0;
+}
+
+.graphit-tour-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--jp-border-color1);
+}
+
+.graphit-tour-dot[data-active='true'] {
+  background: var(--jp-brand-color1);
+}
+
+/* -------------------------------------------------------------- Buttons */
+
+.graphit-tour-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+
+.graphit-tour-spacer {
+  flex: 1 1 auto;
+}
+
+.graphit-tour-remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: var(--jp-ui-font-size1);
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-tour-remember input {
+  margin: 0;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------- Button in the guide */
+
+.graphit-guide-tour {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  margin: 4px 0 8px;
+  border: 1px solid var(--jp-border-color2);
+  border-radius: var(--graphit-radius, 4px);
+  background: var(--jp-layout-color2);
+}
+
+.graphit-guide-tour p {
+  flex: 1 1 16rem;
+  margin: 0;
+  font-size: var(--jp-ui-font-size1);
+  color: var(--jp-ui-font-color2);
+}

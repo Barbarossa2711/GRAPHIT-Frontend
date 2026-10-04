@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling>=1.5.0", "hatch-nodejs-version>=0.3.2", "jupyter-builder>=1.2.0,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "graphit_jupyter"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+classifiers = [
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
+    "Framework :: Jupyter :: JupyterLab :: 4",
+    "Framework :: Jupyter :: JupyterLab :: Extensions",
+    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+# Pure prebuilt labextension: the frontend talks to the GRAPHIT backend directly
+# over CORS, so there is deliberately no jupyter_server dependency here.
+dependencies = []
+dynamic = ["version", "description", "authors", "urls", "keywords"]
+
+[project.optional-dependencies]
+dev = [
+    "jupyterlab>=4",
+    "jupyter-builder>=1.2.0",
+]
+
+[tool.hatch.version]
+source = "nodejs"
+
+[tool.hatch.metadata.hooks.nodejs]
+fields = ["description", "authors", "urls", "keywords"]
+
+[tool.hatch.build.targets.sdist]
+artifacts = ["graphit_jupyter/labextension"]
+exclude = [".github", "binder", ".venv", ".idea", "node_modules"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"graphit_jupyter/labextension" = "share/jupyter/labextensions/graphit-jupyter"
+"install.json" = "share/jupyter/labextensions/graphit-jupyter/install.json"
+
+[tool.hatch.build.hooks.version]
+path = "graphit_jupyter/_version.py"
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "graphit_jupyter/labextension/static/style.js",
+    "graphit_jupyter/labextension/package.json",
+]
+skip-if-exists = ["graphit_jupyter/labextension/static/style.js"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+build_cmd = "build:prod"
+npm = ["jlpm"]
+
+[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
+build_cmd = "install:extension"
+npm = ["jlpm"]
+source_dir = "src"
+build_dir = "graphit_jupyter/labextension"
+
+[tool.check-wheel-contents]
+ignore = ["W002"]

@@ -1,0 +1,350 @@
+/* Domain tree and node detail panel. */
+
+.graphit-tree {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 4px 0;
+}
+
+.graphit-tree-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 24px;
+  padding: 2px 8px 2px 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.graphit-tree-row:hover {
+  background: var(--jp-layout-color2);
+}
+
+/* Mixed from the brand colour and the page background, since --jp-brand-color3 does
+   not change in the dark theme. */
+.graphit-tree-row[aria-selected='true'] {
+  background: color-mix(in srgb, var(--jp-brand-color1) 22%, var(--jp-layout-color1));
+}
+
+.graphit-tree-row:focus-visible {
+  outline: 1px solid var(--jp-brand-color1);
+  outline-offset: -1px;
+}
+
+.graphit-tree-chevron {
+  flex: 0 0 auto;
+  width: 14px;
+  text-align: center;
+  color: var(--jp-ui-font-color2);
+  user-select: none;
+}
+
+.graphit-tree-name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.graphit-tree-row[data-type='lecture'] .graphit-tree-name,
+.graphit-tree-row[data-type='chapter'] .graphit-tree-name {
+  font-weight: 600;
+}
+
+.graphit-tree-row[data-empty='true'] .graphit-tree-name {
+  color: var(--jp-ui-font-color3);
+  font-style: italic;
+}
+
+.graphit-tree-meta {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.graphit-tree-meta .graphit-bar,
+.graphit-tree-meta .graphit-achieve {
+  width: 52px;
+}
+
+.graphit-tree-visits {
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color3);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.graphit-lock {
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color3);
+}
+
+.graphit-lock[data-open='true'] {
+  color: var(--graphit-status-mastered);
+}
+
+.graphit-due-chip {
+  font-size: var(--jp-ui-font-size0);
+  padding: 0 4px;
+  border-radius: 3px;
+  color: var(--graphit-status-due);
+  border: 1px solid var(--graphit-status-due);
+}
+
+.graphit-due-chip[data-overdue='true'] {
+  background: var(--graphit-status-due);
+  color: var(--jp-layout-color1);
+}
+
+/* ---------- detail panel ---------- */
+
+.graphit-detail {
+  padding: 12px 16px;
+}
+
+.graphit-detail h3 {
+  margin: 0 0 2px;
+  font-size: var(--jp-ui-font-size2);
+}
+
+.graphit-detail-path {
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color3);
+  margin-bottom: 10px;
+  word-break: break-all;
+}
+
+.graphit-meter {
+  margin: 8px 0;
+}
+
+/* Heading above the mastery bar, whose top margin holds the peak caption. */
+.graphit-meter-title {
+  margin: 16px 0 0;
+}
+
+/* Dismissible note under the mastery score, shown after a quiz. */
+.graphit-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  /* --jp-warn-color3 does not change in the dark theme, hence color-mix. */
+  background: color-mix(in srgb, var(--jp-warn-color1) 16%, var(--jp-layout-color1));
+  border: 1px solid var(--jp-warn-color1);
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color1);
+}
+
+.graphit-hint-text {
+  flex: 1 1 auto;
+  line-height: 1.4;
+}
+
+.graphit-hint-close {
+  flex: 0 0 auto;
+  margin: -2px -2px 0 0;
+  padding: 0 4px;
+  border: none;
+  background: transparent;
+  color: var(--jp-ui-font-color2);
+  font-size: 15px;
+  line-height: 1.2;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.graphit-hint-close:hover {
+  background: var(--jp-layout-color2);
+  color: var(--jp-ui-font-color1);
+}
+
+.graphit-meter-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+  margin-bottom: 3px;
+}
+
+
+.graphit-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 12px;
+  font-size: var(--jp-ui-font-size1);
+  margin: 10px 0;
+}
+
+.graphit-facts dt {
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-facts dd {
+  margin: 0;
+}
+
+.graphit-reclist {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+
+.graphit-reclist li {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--jp-border-color2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.graphit-reclist li:last-child {
+  border-bottom: none;
+}
+
+.graphit-link {
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--jp-brand-color1);
+  cursor: pointer;
+  text-align: left;
+}
+
+.graphit-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- learning path ----------
+   Nested tinted boxes (path > category > group > entry) instead of separator lines.
+   Tints are mixed from status colours so they work in the dark theme. */
+
+.graphit-path {
+  border: 1px solid var(--jp-border-color1);
+  border-radius: 6px;
+  padding: 10px 12px 12px;
+  background: var(--jp-layout-color2);
+}
+
+.graphit-path > h3 {
+  margin: 0 0 8px;
+  font-size: var(--jp-ui-font-size2);
+  font-weight: 600;
+}
+
+/* Two categories side by side, one column when narrow. */
+.graphit-path-cats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.graphit-path-cat {
+  min-width: 0;
+  border: 1px solid var(--graphit-path-tone);
+  border-left-width: 4px;
+  border-radius: var(--graphit-radius);
+  padding: 8px 10px 10px;
+  background: color-mix(in srgb, var(--graphit-path-tone) 9%, var(--jp-layout-color1));
+}
+
+.graphit-path-cat[data-kind='required'] {
+  --graphit-path-tone: var(--graphit-status-inprogress);
+}
+
+.graphit-path-cat[data-kind='helpful'] {
+  --graphit-path-tone: var(--graphit-status-visited);
+}
+
+.graphit-path-cat > h4 {
+  margin: 0;
+  font-size: var(--jp-ui-font-size1);
+  font-weight: 700;
+  /* Mixed towards the text colour for more contrast in both themes. */
+  color: color-mix(in srgb, var(--graphit-path-tone) 78%, var(--jp-ui-font-color1));
+}
+
+.graphit-path-cat > h4 > span,
+.graphit-path-group-title > span {
+  font-weight: 400;
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-path-caption {
+  margin: 2px 0 6px;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-path-empty {
+  margin: 0;
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-ui-font-color2);
+}
+
+/* Sub-boxes inside a category; each carries its own tone. */
+.graphit-path-group {
+  border: 1px solid var(--graphit-path-tone);
+  border-radius: var(--graphit-radius);
+  padding: 6px 8px 8px;
+  margin-top: 8px;
+  background: color-mix(in srgb, var(--graphit-path-tone) 14%, var(--jp-layout-color1));
+}
+
+.graphit-path-group[data-kind='open'] {
+  --graphit-path-tone: var(--graphit-status-mastered);
+}
+
+.graphit-path-group[data-kind='waiting'] {
+  --graphit-path-tone: var(--jp-error-color1);
+}
+
+.graphit-path-group[data-kind='refresh'] {
+  --graphit-path-tone: var(--graphit-status-due);
+}
+
+.graphit-path-group-title {
+  font-size: var(--jp-ui-font-size1);
+  font-weight: 700;
+  color: color-mix(in srgb, var(--graphit-path-tone) 78%, var(--jp-ui-font-color1));
+}
+
+/* Entries as small cards. */
+.graphit-path-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.graphit-path-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px 8px;
+  border-radius: var(--graphit-radius);
+  border: 1px solid var(--jp-border-color2);
+  background: var(--jp-layout-color1);
+}
+
+.graphit-path-list .graphit-link {
+  flex: 1 1 auto;
+  min-width: 0;
+}

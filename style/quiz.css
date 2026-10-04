@@ -1,0 +1,470 @@
+/* Quiz panel, question renderers, feedback. */
+
+.graphit-quiz {
+  padding: 12px 16px;
+  max-width: 780px;
+}
+
+.graphit-quiz-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--graphit-gap);
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.graphit-quiz-header h3 {
+  margin: 0;
+  font-size: var(--jp-ui-font-size2);
+}
+
+.graphit-generating {
+  border: 1px solid var(--jp-border-color2);
+  border-left: 3px solid var(--jp-brand-color1);
+  border-radius: var(--graphit-radius);
+  padding: 14px 16px;
+  background: var(--jp-layout-color2);
+}
+
+.graphit-generating h4 {
+  margin: 0 0 6px;
+  font-size: var(--jp-ui-font-size2);
+}
+
+.graphit-elapsed {
+  font-variant-numeric: tabular-nums;
+}
+
+.graphit-question {
+  border: 1px solid var(--jp-border-color2);
+  border-radius: var(--graphit-radius);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  background: var(--jp-layout-color1);
+}
+
+.graphit-question-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--graphit-gap);
+  margin-bottom: 8px;
+}
+
+.graphit-question-num {
+  font-weight: 600;
+  color: var(--jp-ui-font-color2);
+  flex: 0 0 auto;
+}
+
+.graphit-question-prompt {
+  flex: 1 1 auto;
+  font-family: var(--jp-content-font-family);
+  font-size: var(--jp-content-font-size1);
+  line-height: 1.5;
+}
+
+.graphit-question-note {
+  font-size: var(--jp-ui-font-size0);
+  color: var(--jp-warn-color1);
+  margin-bottom: 8px;
+}
+
+.graphit-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.graphit-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: var(--graphit-radius);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.graphit-option:hover {
+  background: var(--jp-layout-color2);
+}
+
+.graphit-option input {
+  margin: 3px 0 0;
+  flex: 0 0 auto;
+}
+
+.graphit-cloze-text {
+  font-family: var(--jp-content-font-family);
+  font-size: var(--jp-content-font-size1);
+  line-height: 2.1;
+}
+
+.graphit-select {
+  font-family: inherit;
+  font-size: var(--jp-ui-font-size1);
+  color: var(--jp-ui-font-color1);
+  background: var(--jp-layout-color1);
+  border: 1px solid var(--jp-border-color1);
+  border-radius: var(--graphit-radius);
+  padding: 2px 4px;
+  max-width: 100%;
+}
+
+/* Open blanks: dashed border. */
+.graphit-select[data-empty='true'] {
+  border-style: dashed;
+}
+
+/* Answered blanks: full-strength text. */
+.graphit-select:not([data-empty='true']) {
+  color: var(--jp-ui-font-color1);
+}
+
+/* Bank entries already used in another blank (reuse: false). */
+.graphit-select option:disabled {
+  text-decoration: line-through;
+  color: var(--jp-ui-font-color3);
+}
+
+.graphit-match {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 10px;
+  align-items: center;
+}
+
+.graphit-match-left {
+  font-family: var(--jp-content-font-family);
+  line-height: 1.4;
+}
+
+.graphit-order-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.graphit-order-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--jp-border-color2);
+  border-radius: var(--graphit-radius);
+  background: var(--jp-layout-color1);
+}
+
+.graphit-order-item[data-dragging='true'] {
+  opacity: 0.6;
+  border-color: var(--jp-brand-color1);
+}
+
+.graphit-order-handle {
+  cursor: grab;
+  color: var(--jp-ui-font-color3);
+  user-select: none;
+  touch-action: none;
+  flex: 0 0 auto;
+  padding: 0 2px;
+}
+
+.graphit-order-handle:active {
+  cursor: grabbing;
+}
+
+.graphit-order-index {
+  flex: 0 0 auto;
+  width: 18px;
+  text-align: right;
+  color: var(--jp-ui-font-color3);
+  font-variant-numeric: tabular-nums;
+}
+
+.graphit-order-text {
+  flex: 1 1 auto;
+  line-height: 1.4;
+}
+
+.graphit-order-buttons {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 2px;
+}
+
+.graphit-order-buttons button {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  line-height: 1;
+}
+
+.graphit-quiz-footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--graphit-gap);
+  padding: 10px 0;
+  background: var(--jp-layout-color1);
+  border-top: 1px solid var(--jp-border-color2);
+  flex-wrap: wrap;
+}
+
+/* Armed submit: the sticky footer shows the warning next to the button. */
+.graphit-quiz-footer[data-confirming='true'] {
+  border-top-color: var(--jp-warn-color1);
+  background: color-mix(in srgb, var(--jp-warn-color1) 10%, var(--jp-layout-color1));
+}
+
+.graphit-quiz-warn {
+  color: var(--jp-warn-color1);
+}
+
+/* ---------- feedback ---------- */
+
+.graphit-result {
+  border: 1px solid var(--jp-border-color2);
+  border-left-width: 3px;
+  border-radius: var(--graphit-radius);
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+.graphit-result[data-correct='true'] {
+  border-left-color: var(--jp-success-color1);
+}
+
+.graphit-result[data-correct='false'] {
+  border-left-color: var(--jp-error-color1);
+}
+
+.graphit-result-head {
+  display: flex;
+  align-items: center;
+  gap: var(--graphit-gap);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* ---------- answer review (Feedback.tsx AnswerView) ----------
+   data-state: ok (matches), wrong (given but different), missing (should have been
+   chosen), empty (nothing given), neutral (irrelevant). */
+
+.graphit-answer {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0;
+  font-size: var(--jp-ui-font-size1);
+}
+
+.graphit-answer--block {
+  display: block;
+}
+
+.graphit-answer-label {
+  display: block;
+  font-size: var(--jp-ui-font-size0);
+  font-weight: 600;
+  color: var(--jp-ui-font-color2);
+  margin-bottom: 3px;
+}
+
+.graphit-answer--block .graphit-answer-label {
+  margin-top: 4px;
+}
+
+.graphit-answer-hint {
+  font-weight: 400;
+}
+
+.graphit-answer-chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  border: 1px solid var(--graphit-answer-tone, var(--jp-border-color1));
+  background: color-mix(in srgb, var(--graphit-answer-tone, var(--jp-layout-color2)) 14%, var(--jp-layout-color1));
+  color: var(--jp-ui-font-color1);
+  line-height: 1.5;
+}
+
+.graphit-result [data-state='ok'] {
+  --graphit-answer-tone: var(--jp-success-color1);
+}
+
+.graphit-result [data-state='wrong'] {
+  --graphit-answer-tone: var(--jp-error-color1);
+}
+
+.graphit-result [data-state='missing'] {
+  --graphit-answer-tone: var(--jp-warn-color1);
+}
+
+.graphit-result [data-state='empty'] .graphit-answer-chip,
+.graphit-result .graphit-answer-chip[data-state='empty'] {
+  --graphit-answer-tone: var(--jp-border-color1);
+  color: var(--jp-ui-font-color2);
+  font-style: italic;
+}
+
+/* Option / row lists (multiple choice, orphan cloze blanks) */
+.graphit-answer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.graphit-answer-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 3px 8px;
+  border-radius: var(--graphit-radius);
+  border: 1px solid var(--jp-border-color2);
+  background: var(--jp-layout-color1);
+}
+
+.graphit-answer-list li[data-state='ok'],
+.graphit-answer-list li[data-state='wrong'],
+.graphit-answer-list li[data-state='missing'] {
+  border-color: var(--graphit-answer-tone);
+  background: color-mix(in srgb, var(--graphit-answer-tone) 12%, var(--jp-layout-color1));
+}
+
+.graphit-answer-list li[data-state='neutral'] {
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-answer-mark {
+  flex: 0 0 1.2em;
+  font-weight: 700;
+  color: var(--graphit-answer-tone, var(--jp-ui-font-color3));
+}
+
+.graphit-answer-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.graphit-answer-note {
+  font-size: var(--jp-ui-font-size0);
+  color: var(--graphit-answer-tone, var(--jp-ui-font-color2));
+  white-space: nowrap;
+}
+
+/* Cloze: the sentence with the student's fill-ins as chips */
+.graphit-cloze-review {
+  margin: 0;
+  line-height: 2;
+  font-family: var(--jp-content-font-family);
+}
+
+.graphit-cloze-slot {
+  display: inline-flex;
+  gap: 3px;
+  margin: 0 2px;
+  vertical-align: baseline;
+}
+
+/* Matching: one row per left-hand term */
+.graphit-answer-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: var(--jp-ui-font-size1);
+}
+
+.graphit-answer-table th {
+  text-align: left;
+  font-size: var(--jp-ui-font-size0);
+  font-weight: 600;
+  color: var(--jp-ui-font-color2);
+  padding: 2px 6px;
+  border-bottom: 1px solid var(--jp-border-color2);
+}
+
+.graphit-answer-table td {
+  padding: 4px 6px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--jp-border-color2);
+}
+
+.graphit-answer-table tr:last-child td {
+  border-bottom: none;
+}
+
+.graphit-answer-table tr[data-state='wrong'] td {
+  background: color-mix(in srgb, var(--jp-error-color1) 10%, var(--jp-layout-color1));
+}
+
+.graphit-answer-table tr[data-state='ok'] td {
+  background: color-mix(in srgb, var(--jp-success-color1) 10%, var(--jp-layout-color1));
+}
+
+.graphit-answer-table td.graphit-answer-mark {
+  width: 1.2em;
+}
+
+/* Ordering: two numbered columns side by side */
+.graphit-answer-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.graphit-answer-order {
+  margin: 0;
+  padding-left: 1.6em;
+}
+
+.graphit-answer-order li {
+  padding: 2px 6px;
+  margin: 2px 0;
+  border-radius: var(--graphit-radius);
+}
+
+.graphit-answer-order li[data-state='ok'] {
+  background: color-mix(in srgb, var(--jp-success-color1) 12%, var(--jp-layout-color1));
+}
+
+.graphit-answer-order li[data-state='wrong'] {
+  background: color-mix(in srgb, var(--jp-error-color1) 12%, var(--jp-layout-color1));
+}
+
+.graphit-result-expl {
+  margin-top: 6px;
+  font-family: var(--jp-content-font-family);
+  line-height: 1.5;
+  color: var(--jp-ui-font-color2);
+}
+
+.graphit-result details {
+  margin-top: 6px;
+  font-size: var(--jp-ui-font-size0);
+}
+
+.graphit-result details pre {
+  overflow-x: auto;
+  background: var(--jp-layout-color2);
+  padding: 6px;
+  border-radius: 3px;
+}
+
+.graphit-scorecard {
+  border: 1px solid var(--jp-border-color2);
+  border-radius: var(--graphit-radius);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  background: var(--jp-layout-color2);
+}
+
+.graphit-scorecard h4 {
+  margin: 0 0 8px;
+}

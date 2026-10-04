@@ -1,0 +1,146 @@
+{
+  "jupyter.lab.shortcuts": [],
+  "_comment_hidden": "Deliberately hidden from the Advanced Settings Editor. Students need none of these values: studentId and baseUrl are set by the spawn script from the hub environment, everything else comes from the deployment configuration. A manually changed studentId would write progress onto another student's node. This flag only affects the editor; loading and settingRegistry.load() are unaffected.",
+  "jupyter.lab.setting-deprecated": true,
+  "title": "GRAPHIT",
+  "description": "Einstellungen für die GRAPHIT-Tutor-Erweiterung.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "baseUrl": {
+      "type": "string",
+      "title": "Backend-URL",
+      "description": "Basis-URL des GRAPHIT-Backends (FastAPI). Ohne abschließenden Schrägstrich.",
+      "default": "http://127.0.0.1:8077"
+    },
+    "studentId": {
+      "type": "string",
+      "title": "Studenten-ID",
+      "description": "Wird als X-Student-Id gesendet. MUSS über alle Sitzungen identisch bleiben, sonst zersplittert der Lernstand im Graphen. Leer lassen, um beim Start danach gefragt zu werden.",
+      "default": ""
+    },
+    "mockMode": {
+      "type": "boolean",
+      "title": "Demo-/Offline-Modus",
+      "description": "Nutzt eingebaute Beispieldaten statt des echten Backends. Für Entwicklung und Vorführungen ohne Neo4j/LLM.",
+      "default": false
+    },
+    "streaming": {
+      "type": "boolean",
+      "title": "Chat-Antworten streamen",
+      "description": "Server-Sent Events verwenden. Ausschalten, um die nicht-gestreamte Antwort zu testen.",
+      "default": true
+    },
+    "chatModel": {
+      "type": "string",
+      "title": "Modellname",
+      "description": "Wird nur zurückgespiegelt; der Supervisor entscheidet am Inhalt, welcher Agent antwortet.",
+      "default": "graphit-tutor"
+    },
+    "reviewSessionSize": {
+      "type": "integer",
+      "title": "Konzepte je Wiederholungs-Sitzung",
+      "description": "Jedes Konzept kostet 30–120 s Fragengenerierung. Klein halten.",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 5
+    },
+    "persistChatHistory": {
+      "type": "boolean",
+      "title": "Chat-Verlauf speichern",
+      "description": "Verlauf über Reloads hinweg in der JupyterLab-Zustandsdatenbank halten. Standardmäßig aus: ein Chat ist eine Sitzung, die mit dem Schließen endet. Eingeschaltet überlebt ein noch offener Chat einen Reload — beendete Chats werden auch dann verworfen.",
+      "default": false
+    },
+    "showDiagnostics": {
+      "type": "boolean",
+      "title": "Diagnose-Angaben anzeigen",
+      "description": "Blendet in der Seitenleiste die Backend-Adresse und den Knopf „Verbindung testen“ ein. Standardmäßig aus: Studierende brauchen diese Angaben nicht, und die Adresse gehört nicht in eine Lehroberfläche. Für die Fehlersuche im Betrieb einschaltbar. Der Verbindungsstatus selbst bleibt immer sichtbar — er erklärt, warum nichts lädt.",
+      "default": false
+    },
+    "timeouts": {
+      "type": "object",
+      "title": "Zeitlimits (ms)",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "default": {
+          "type": "integer",
+          "minimum": 1000,
+          "default": 15000
+        },
+        "health": {
+          "type": "integer",
+          "minimum": 1000,
+          "default": 5000
+        },
+        "domainTree": {
+          "type": "integer",
+          "minimum": 1000,
+          "default": 30000
+        },
+        "progress": {
+          "type": "integer",
+          "minimum": 1000,
+          "default": 30000
+        },
+        "recommend": {
+          "type": "integer",
+          "minimum": 1000,
+          "default": 20000
+        },
+        "activity": {
+          "type": "number",
+          "title": "Aktivitaetshistorie (ms)",
+          "default": 15000
+        },
+        "chat": {
+          "type": "integer",
+          "minimum": 10000,
+          "default": 180000
+        },
+        "quizCandidates": {
+          "type": "integer",
+          "minimum": 1000,
+          "default": 30000
+        },
+        "quizStart": {
+          "type": "integer",
+          "minimum": 30000,
+          "default": 240000
+        },
+        "quizSubmit": {
+          "type": "integer",
+          "minimum": 1000,
+          "default": 60000
+        }
+      }
+    },
+    "mock": {
+      "type": "object",
+      "title": "Mock-Verhalten",
+      "additionalProperties": false,
+      "default": {},
+      "properties": {
+        "quizStartDelayMs": {
+          "type": "integer",
+          "title": "Simulierte Fragengenerierung (ms)",
+          "minimum": 0,
+          "default": 800
+        },
+        "chatFirstChunkMs": {
+          "type": "integer",
+          "title": "Simulierte Wartezeit bis zum ersten Chat-Chunk (ms)",
+          "minimum": 0,
+          "default": 3000
+        },
+        "failureRate": {
+          "type": "number",
+          "title": "Simulierte Fehlerrate (0–1)",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0
+        }
+      }
+    }
+  }
+}
